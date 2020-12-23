@@ -1,7 +1,7 @@
 {
-  "name": "node-lab1",
+  "name": "movies-api",
   "version": "1.0.0",
-  "description": "Practical labs for the WAD2 module, BSc. Applied/Software Systems Dev/Forensics",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node index.js"
@@ -12,10 +12,11 @@
     "babel-cli": "^6.26.0",
     "babel-eslint": "^10.1.0",
     "babel-preset-env": "^1.7.0",
-    "eslint": "^7.14.0",
+    "eslint": "^7.16.0",
     "nodemon": "^2.0.6"
   },
   "dependencies": {
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
   }
 }
