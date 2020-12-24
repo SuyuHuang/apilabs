@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 dotenv.config();
 
 // Connect to database
-mongoose.connect(process.env.mongoDB);
+mongoose.connect(process.env.mongoDB,{ useNewUrlParser: true,useUnifiedTopology: true});
 const db = mongoose.connection;
 
 db.on('error', (err) => {
