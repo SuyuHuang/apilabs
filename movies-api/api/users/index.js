@@ -1,6 +1,7 @@
 import express from 'express';
 import User from './userModel';
 import jwt from 'jsonwebtoken';
+import movieModel from "../movies/movieModel"
 const router = express.Router(); // eslint-disable-line
 
 // Get all users
@@ -58,29 +59,20 @@ router.put('/:id',  (req, res) => {
     })
     .then(user => res.json(200, user));
 });
-router.post('/:userName/favourites', (req, res, next) => {
-    const newFavourite = req.body;
-    const query = {username: req.params.userName};
-    console.log(newFavourite);
-    console.log(newFavourite.id);
-    if (newFavourite && newFavourite.id) {
-      User.find(query).then(
-        user => {
-          (user.favourites)?user.favourites.push(newFavourite):user.favourites =[newFavourite];
-          User.findOneAndUpdate(query, {favourites:user.favourites}, {
-            new: true
-          }).then(user => res.status(201).send(user));
-        }
-      ).catch(next);
-    } else {
-        res.status(401).send("Unable to find user");
-    }
-  });
+router.post('/:userName/favourites', async (req, res, next) => {
+  const newFavourite = req.body.id;
+  const userName = req.params.userName;
+  const movie = await movieModel.findByMovieDBId(newFavourite);
+  const user = await User.findByUserName(userName);
+  await user.favourites.push(movie._id);
+  await user.save(); 
+  res.status(201).json(user); 
+});
 
-  router.get('/:userName/favourites', (req, res, next) => {
-    const user = req.params.userName;
-    User.find( {username: user}).then(
-        user => res.status(201).send(user.favourites)
-    ).catch(next);
-  });
+router.get('/:userName/favourites', (req, res, next) => {
+  const userName = req.params.userName;
+  User.findByUserName(userName).populate('favourites').then(
+    user => res.status(201).json(user.favourites)
+  ).catch(next);
+});
 export default router;
